@@ -1,14 +1,22 @@
-// vite.config.js - FOR GITHUB PAGES DEPLOYMENT
+// vite.config.js - FINAL CODE for GitHub Pages Deployment
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// Replace '/nyxstream-vite/' with the actual name of your repository on GitHub!
-// Example: If your repo URL is https://github.com/YourUser/MyCoolApp
-// then base should be '/MyCoolApp/'
-const repositoryName = '/nyxstream-vite/'; // <<< CHANGE THIS TO YOUR REPO NAME!!! (Include slashes)
+// --- Set base path to match your GitHub repository name ---
+const deploymentBase = '/NyxStream_React/'; // <<< Set to your repo name
+// --- --- --- ---
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: repositoryName, // Use the variable here
+  // Set the base path for correct asset loading and routing on GitHub Pages
+  base: deploymentBase,
+
   plugins: [react()],
+
+  // Optional: Build output directory (defaults to 'dist')
+  // build: {
+  //   outDir: 'dist'
+  // }
 });

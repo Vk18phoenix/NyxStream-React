@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 function Sidebar({ toggleSidebar }) {
   return (
@@ -9,7 +9,6 @@ function Sidebar({ toggleSidebar }) {
               <i className="uil uil-bars"></i>
             </button>
             <Link to="/" className="nav-logo">
-              {/* Correct path from public folder */}
               <img src="/images/nyxstream-high-resolution-logo.png" alt="Logo" className="logo-image" />
               <h2 className="logo-text">NyxStream</h2>
             </Link>
@@ -17,29 +16,30 @@ function Sidebar({ toggleSidebar }) {
 
       <div className="links-container">
         <div className="link-section">
-          <Link to="/" className="link-item"> <i className="uil uil-estate"></i> Home </Link>
-          <a href="#" className="link-item"> <i className="uil uil-video"></i> Shorts </a>
-          <a href="#" className="link-item"> <i className="uil uil-tv-retro"></i> Subscriptions </a>
+          <NavLink to="/" className="link-item" end> <i className="uil uil-estate"></i> Home </NavLink>
+          {/* --- THIS IS THE CORRECTED LINK --- */}
+          <Link to="/shorts" className="link-item"> <i className="uil uil-video"></i> Shorts </Link>
+          <NavLink to="/subscriptions" className="link-item"> <i className="uil uil-tv-retro"></i> Subscriptions </NavLink>
         </div>
         <div className="section-separator"></div>
         <div className="link-section">
           <h4 className="section-title">You</h4>
-          <a href="#" className="link-item"> <i className="uil uil-user-square"></i> Your channel </a>
-          <a href="#" className="link-item"> <i className="uil uil-history"></i> History </a>
-          <a href="#" className="link-item"> <i className="uil uil-clock"></i> Watch later </a>
+          <Link to="/channel" className="link-item"> <i className="uil uil-user-square"></i> Your channel </Link>
+          <Link to="/history" className="link-item"> <i className="uil uil-history"></i> History </Link>
+          <Link to="/watchlater" className="link-item"> <i className="uil uil-clock"></i> Watch later </Link>
         </div>
         <div className="section-separator"></div>
         <div className="link-section">
           <h4 className="section-title">Explore</h4>
-          <a href="#" className="link-item"> <i className="uil uil-fire"></i> Trending </a>
-          <a href="#" className="link-item"> <i className="uil uil-music"></i> Music </a>
-          <a href="#" className="link-item"> <i className="uil uil-basketball"></i> Gaming </a>
-          <a href="#" className="link-item"> <i className="uil uil-trophy"></i> Sports </a>
+          <Link to="/trending" className="link-item"> <i className="uil uil-fire"></i> Trending </Link>
+          <Link to="/music" className="link-item"> <i className="uil uil-music"></i> Music </Link>
+          <Link to="/gaming" className="link-item"> <i className="uil uil-basketball"></i> Gaming </Link>
+          <Link to="/sports" className="link-item"> <i className="uil uil-trophy"></i> Sports </Link>
         </div>
         <div className="section-separator"></div>
         <div className="link-section">
           <h4 className="section-title">More from NyxStream</h4>
-          <a href="#" className="link-item"> <i className="uil uil-shield-plus"></i> NyxStream Plus </a>
+          <Link to="/premium" className="link-item"> <i className="uil uil-shield-plus"></i> NyxStream Plus </Link>
           <a href="#" className="link-item"> <i className="uil uil-headphones-alt"></i> NyxStream Music </a>
           <a href="#" className="link-item"> <i className="uil uil-airplay"></i> NyxStream Kids </a>
         </div>

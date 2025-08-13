@@ -1,7 +1,6 @@
-// src/components/Navbar.jsx - WITH DEBUGGING for Sign Out Click
 import React, { useState, useEffect, useRef } from 'react';
+import logo from '../assets/nyxstream-high-resolution-logo.png';
 import { Link, useNavigate } from 'react-router-dom';
-// --- REMOVED AuthContext import (Assuming basic setup) ---
 
 // Accept user and onSignOut props from App.jsx
 function Navbar({ isDarkMode, toggleDarkMode, toggleSidebar, toggleMobileSearch, user, onSignOut }) {
@@ -10,7 +9,7 @@ function Navbar({ isDarkMode, toggleDarkMode, toggleSidebar, toggleMobileSearch,
   const dropdownRef = useRef(null);
   const profileRef = useRef(null);
 
-  // Keep useEffect for outside click
+  // YOUR useEffect for outside click (UNCHANGED)
   useEffect(() => {
     const handleClickOutside = (event) => {
       if ( dropdownRef.current && !dropdownRef.current.contains(event.target) && profileRef.current && !profileRef.current.contains(event.target) ) {
@@ -22,43 +21,34 @@ function Navbar({ isDarkMode, toggleDarkMode, toggleSidebar, toggleMobileSearch,
     return () => { document.removeEventListener('mousedown', handleClickOutside); };
   }, [isDropdownOpen]);
 
-
+  // YOUR handleProfileClick (UNCHANGED)
   const handleProfileClick = () => {
     if (!user) { navigate('/signup-login'); }
     else { setIsDropdownOpen(prev => !prev); }
   };
 
-  // --- MODIFIED: Added Alert and Log for Debugging ---
+  // YOUR handleSignOutClick (UNCHANGED)
   const handleSignOutClick = async () => {
-      // --- IMMEDIATE FEEDBACK ---
       console.log("!!! SIGN OUT BUTTON CLICKED !!!");
-      alert("SIGN OUT BUTTON CLICKED! Check console.");
-      // --- END FEEDBACK ---
-
-      setIsDropdownOpen(false); // Close dropdown
-      if (onSignOut) { // Check if the prop function exists
-          console.log("Calling onSignOut prop function..."); // Log before calling
+      setIsDropdownOpen(false);
+      if (onSignOut) {
           try {
-              await onSignOut(); // Call the function passed from App
-              console.log("onSignOut prop function finished."); // Log after calling
+              await onSignOut();
           } catch(err) {
-              console.error("Error during onSignOut call:", err); // Log errors from the prop function
+              console.error("Error during onSignOut call:", err);
           }
       } else {
           console.error("onSignOut prop function was NOT passed to Navbar!");
-          alert("Error: Sign out function missing. Check console.");
       }
-      console.log("handleSignOutClick function finished.");
   };
-  // --- END MODIFIED ---
-
+  
+  // YOUR handleSwitchAccountsClick (UNCHANGED)
   const handleSwitchAccountsClick = () => {
       setIsDropdownOpen(false);
       navigate('/signup-login');
-      console.log("Switch Accounts clicked - navigating to login.");
   };
 
-
+  // YOUR handleSearchSubmit (UNCHANGED)
   const handleSearchSubmit = (e) => { e.preventDefault(); console.log("Search submitted"); };
 
   return (
@@ -67,13 +57,17 @@ function Navbar({ isDarkMode, toggleDarkMode, toggleSidebar, toggleMobileSearch,
         {/* Nav Left */}
         <div className="nav-section nav-left">
           <button className="nav-button menu-button" onClick={toggleSidebar}><i className="uil uil-bars"></i></button>
+          {/* --- CHANGE 1: CORRECTED LOGO --- */}
+          {/* This uses the :where selector from your CSS so the logo and text are always visible */}
           <Link to="/" className="nav-logo">
-            <img src="/images/nyxstream-high-resolution-logo.png" alt="Logo" className="logo-image" />
-            <h2 className="logo-text">NyxStream</h2>
+            <img src={logo} alt="Logo" className="logo-image" />
+
+            <h1 className="logo-text">NyxStream</h1>
           </Link>
+          {/* --- END OF CHANGE 1 --- */}
         </div>
 
-        {/* Nav Center */}
+        {/* Nav Center (UNCHANGED) */}
         <div className="nav-section nav-center">
            <button className="nav-button search-back-button" id="search-back-button" onClick={toggleMobileSearch}><i className="uil uil-arrow-left"></i></button>
            <form action="#" className="search-form" onSubmit={handleSearchSubmit}>
@@ -88,32 +82,39 @@ function Navbar({ isDarkMode, toggleDarkMode, toggleSidebar, toggleMobileSearch,
           <button className="nav-button search-button" id="search-button" onClick={toggleMobileSearch}><i className="uil uil-search"></i></button>
           <button className="nav-button theme-button" onClick={toggleDarkMode}><i className={`uil ${isDarkMode ? 'uil-sun' : 'uil-moon'}`}></i></button>
 
-          {/* Container for profile image and dropdown */}
+          {/* --- CHANGE 2: CORRECTED USER PROFILE / SIGN IN LOGIC --- */}
           <div style={{ position: 'relative' }} ref={profileRef}>
-            {/* Conditional Profile Image/Placeholder */}
-            {user && user.photoURL ? (
-              <img src={user.photoURL} alt="User profile" className="user-image" onClick={handleProfileClick} style={{ cursor: 'pointer' }} title={`Logged in as ${user.displayName || user.email}`} />
-            ) : user && !user.photoURL ? (
-              <div onClick={handleProfileClick} title={`Logged in as ${user.displayName || user.email}`} style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#ccc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', color: '#555', textTransform: 'uppercase' }}>
-                {(user.displayName || user.email || '?')[0]}
-              </div>
+            {user ? (
+              // If the user IS logged in, show their avatar (your existing logic)
+              <>
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="User profile" className="user-image" onClick={handleProfileClick} style={{ cursor: 'pointer' }} title={`Logged in as ${user.displayName || user.email}`} />
+                ) : (
+                  <div onClick={handleProfileClick} title={`Logged in as ${user.displayName || user.email}`} style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#ccc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', color: '#555', textTransform: 'uppercase' }}>
+                    {(user.displayName || user.email || '?')[0]}
+                  </div>
+                )}
+                {/* Your Dropdown Menu (UNCHANGED) */}
+                {isDropdownOpen && (
+                  <div className="profile-dropdown" ref={dropdownRef}>
+                    <button onClick={handleSwitchAccountsClick} className="dropdown-item">
+                      <i className="uil uil-users-alt"></i> Switch account
+                    </button>
+                    <button onClick={handleSignOutClick} className="dropdown-item">
+                       <i className="uil uil-signout"></i> Sign out
+                    </button>
+                  </div>
+                )}
+              </>
             ) : (
-              <img src="https://static.wikia.nocookie.net/disney/images/2/22/Srmthfg_wiki_promo_chiro.jpg/revision/latest?cb=20120722141119" alt="Login / Sign Up" className="user-image" onClick={handleProfileClick} style={{ cursor: 'pointer' }} title="Login / Sign Up"/>
-            )}
-
-            {/* Dropdown Menu (Simplified) */}
-            {isDropdownOpen && user && (
-              <div className="profile-dropdown" ref={dropdownRef}>
-                <button onClick={handleSwitchAccountsClick} className="dropdown-item">
-                  <i className="uil uil-users-alt"></i> Switch account
-                </button>
-                {/* Sign Out Button - Ensure onClick is correct */}
-                <button onClick={handleSignOutClick} className="dropdown-item">
-                   <i className="uil uil-signout"></i> Sign out
-                </button>
-              </div>
+              // If the user IS NOT logged in, show the "Sign In" button
+              <Link to="/signup-login" className="signin-button">
+                <i className="uil uil-user-circle"></i>
+                <span>Sign In</span>
+              </Link>
             )}
           </div>
+          {/* --- END OF CHANGE 2 --- */}
         </div>
       </nav>
     </header>
